@@ -51,7 +51,8 @@ def random_ten_meals(request):
 
     return JsonResponse(serialize('json', random_meals), safe=False)
 
-
+# search meals by name and category
+# /recipers/search/?name=meal_name&category=meal_category
 def search_by(request):
     
     # required_parm_fields = ("name", "category")
@@ -98,8 +99,7 @@ def search_by(request):
         if not meals:
             return JsonResponse({"message": f"No meal found for corresponding name: '{meal_name}' and category: '{meal_category}'"}, status=404)
         
-        return serialized_paginator_response(meals)
-        
+        return serialized_paginator_response(meals)       
     
     if meal_name:
         meals = Meal.objects.filter(strMeal__contains=meal_name).order_by('strMeal')
