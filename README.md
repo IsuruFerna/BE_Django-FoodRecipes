@@ -1,13 +1,14 @@
 # IsuruFerna-BE_Django-FoodRecipes
 
-# IsuruFerna-BE_Django-FoodRecipes
+It's a Food Recipe application currently developing for education purposes
 
-make sure to import categories first and then meals. Otherwise meals can't makes relations with categoris, so meals will not saved into DB
+### IMPORTANT!!!
+make sure to import categories first and then meals. Otherwise, meals can't make relations with categories, so meals will not saved in DB
 
-## import categoies data from an Open-Source API
+## Import categories data from an Open-Source API
 
 `python manage.py import_categories`
 
-## import meals data form an Open-Source API
+## Import meals data from an Open-Source API
 
 `python manage.py import_meals`
