@@ -8,6 +8,7 @@ import random
 
 from recipes.models import Category, Meal
 
+
 # gets all the meals with paginator
 # /recipes/?page_num=1&per_page=10
 def all_meals(request):
