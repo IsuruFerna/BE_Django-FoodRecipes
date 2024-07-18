@@ -12,3 +12,6 @@ make sure to import categories first and then meals. Otherwise, meals can't make
 ## Import meals data from an Open-Source API
 
 `python manage.py import_meals`
+
+## Front-end - under construction
+Repo: https://github.com/IsuruFerna/FE_React-FoodRecipes/tree/development
