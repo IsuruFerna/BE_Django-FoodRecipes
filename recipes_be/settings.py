@@ -53,12 +53,19 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'PAGE_QUERY_PARAM': 'page_num',
+    'PAGE_SIZE_QUERY_PARAM': 'per_page',
+    'MAX_PAGE_SIZE': 100, 
+
 }
 
 # documentation: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=3),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
     "ROTATE_REFRESH_TOKENS": True, # while this is true generates new refresh token at each time when the user logs in or each time when token gets refresh. 
 
@@ -152,14 +159,6 @@ DATABASES = {
     }
 }
 
-# REST_FRAMEWORK = {
-#     # Use Django's standard `django.contrib.auth` permissions,
-#     # or allow read-only access for unauthenticated users.
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-#     ]
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -204,4 +203,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # since this in development in local machine, I'm going to allow all to have access to the server. Otherwise I have to set it differently
 # https://github.com/adamchainz/django-cors-headers
-CORS_ALLOW_ALL_ORIGINS: True
+# CORS_ALLOW_ALL_ORIGINS: True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000"
+]
+
+# CORS_ALLOW_CREDENTIALS = True
+
