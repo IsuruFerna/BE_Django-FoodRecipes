@@ -4,32 +4,32 @@ from django.core.serializers import serialize
 from django.core.paginator import Paginator
 from django.db.models import Q
 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
+
+
 import random
 
 from recipes.models import Category, Meal
+from .serializers import MealSerializer
+
 
 # gets all the meals with paginator
 # /recipes/?page_num=1&per_page=10
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def all_meals(request):
-    meals = Meal.objects.all()
+    meals = Meal.objects.all().order_by('strMeal')
 
-    page_number = int(request.GET.get('page_num', 1))
-    items_per_page = int(request.GET.get('per_page', 10))
+    # sets pagination using django_rest and it's global settings from the settings.py file under REST_FRAMEWORK list
+    paginator = PageNumberPagination()
+    paginated_meals = paginator.paginate_queryset(meals, request)
+    serialized_meals = MealSerializer(paginated_meals, many=True)
 
-    paginator = Paginator(meals, items_per_page)
-    page_obj = paginator.get_page(page_number)
+    return paginator.get_paginated_response(serialized_meals.data)
 
-    serialized_meals = serialize('json', page_obj)
-
-    return JsonResponse({
-        'data': serialized_meals,
-        'meta': {
-            'page': page_obj.number,
-            'per_page': items_per_page,
-            'total_pages': paginator.num_pages,
-            'total_items': paginator.count
-        }
-    })
 
 
 # gets random 10 meals
