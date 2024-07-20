@@ -94,7 +94,7 @@ class Meal(models.Model):
         ]
         
         # checks if there are at least 3 ingredients
-        if len([i for i in ingredients if i or i !=""]) >= 3:
+        if len([i for i in ingredients if i]) >= 3:
             at_lest_three_must_not_empty = True
 
         return len(self.strInstructions) < 5000 and self.strCategory and len(self.strMeal) < 200 and at_lest_three_must_not_empty

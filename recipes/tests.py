@@ -31,19 +31,6 @@ class CategoryTestCase(TestCase):
             strIngredient1 ="mushrooms",
             strIngredient2 = "English Mustard", 
             strIngredient3 = "Olive Oil", 
-            strIngredient4 = "Beef Fillet",
-            strIngredient5 = "Parma ham", 
-            strIngredient6 = "Puff Pastry", 
-            strIngredient7 = "Flour",
-            strIngredient8 = "Egg Yolks", 
-            strMeasure1 =  "400g",
-            strMeasure2 =  "1-2tbsp",
-            strMeasure3 =  "Dash",
-            strMeasure4 =  	"750g piece",
-            strMeasure5 =  "6-8 slices",
-            strMeasure6 =  "500g",
-            strMeasure7 =  "Dusting",
-            strMeasure8 =  "2 Beaten ",
             strSource = "http://www.goodtoknow.co.uk/recipes/164868/Gordon-Ramsay-s-beef-Wellington",
         )
 
@@ -58,22 +45,24 @@ class CategoryTestCase(TestCase):
             strYoutube = 	"https://www.youtube.com/watch?v=FS8u1RBdf6I",
             strIngredient1 ="mushrooms",
             strIngredient2 = "English Mustard", 
+            strIngredient3 = "sdsd", 
+            strIngredient4 = "erer", 
             strMeasure1 =  "400g",
             strMeasure2 =  "1-2tbsp",
             strSource = "http://www.goodtoknow.co.uk/recipes/164868/Gordon-Ramsay-s-beef-Wellington",
         )
 
-    # test count
+    # test category
     def test_category_count(self):
         c = Category.objects.all()
         print("this is meal count: ", c.count())
         self.assertEqual(c.count(), 2)
 
-    # assert true
     def test_pizza_exsists(self):
         p = Category.objects.get(strCategory="Pizza")
         self.assertEqual(p.strCategory, "Pizza")
-
+    
+    # test meals
     def test_meal_category_and_area(self):
         c = Category.objects.get(strCategory="Beef")
         m = Meal.objects.get(strMeal="Beef Wellington", strCategory=c)
