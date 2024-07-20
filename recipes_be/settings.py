@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = "users.CustomUser"
 
 # Application definition
 
@@ -56,7 +57,7 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 12,
     'PAGE_QUERY_PARAM': 'page_num',
     'PAGE_SIZE_QUERY_PARAM': 'per_page',
     'MAX_PAGE_SIZE': 100, 
@@ -65,7 +66,7 @@ REST_FRAMEWORK = {
 
 # documentation: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=3),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
     "ROTATE_REFRESH_TOKENS": True, # while this is true generates new refresh token at each time when the user logs in or each time when token gets refresh. 
 
