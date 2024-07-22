@@ -1,0 +1,60 @@
+
+# register user
+POST http://127.0.0.1:8000/user/register/
+Content-Type: application/json
+
+{
+    "username": "username",
+    "password": "Password",
+    "first_name": "first_name",
+    "last_name": "last_name",
+    "email": "email@example.com"
+}
+
+###
+# access token
+POST http://127.0.0.1:8000/user/api/token/
+Content-Type: application/json
+
+{
+    "username": "",
+    "password": ""
+}
+
+###
+# refresh token
+# access token valid only for 5 minutes
+POST http://127.0.0.1:8000/user/api/token/refresh/
+Content-Type: application/json
+
+{
+    "refresh": ""
+}
+
+###
+# gets current user's data
+GET http://127.0.0.1:8000/user/me/
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+###
+# update personal data
+PUT http://127.0.0.1:8000/user/me/
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+{
+    "username": "foo",
+    "first_name": "ccbcc",
+    "last_name": "aaa",
+    "email": "emu@example.com",
+
+    "old_password": "only if neccessary",
+    "new_password": "only if neccessary",
+}
+
+###
+# get user with ID
+GET http://127.0.0.1:8000/user/user/e32ad9a0-88ab-49cf-8654-05aa073858fb
+Content-Type: application/json
+Authorization: Bearer <your-token>

@@ -1,0 +1,12 @@
+use django shell to generate secret_key
+from django.core.management.utils import get_random_secret_key
+print(get_random_secret_key())
+
+save this in action --> new repository secret
+SECRET_KEY=your SECRET_KEY
+
+and this under the runs on in github workflow yml file
+
+ runs-on: ubuntu-latest
+      env:
+         SECRET_KEY: ${{ secrets.SECRET_KEY }}
