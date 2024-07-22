@@ -26,7 +26,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(required=True)
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ['id', 'username', 'first_name', 'last_name', 'email']
         
 
 class ModifyUserSerializer(serializers.ModelSerializer):
