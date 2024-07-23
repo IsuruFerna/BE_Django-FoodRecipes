@@ -5,7 +5,7 @@ from ..models import CustomUser
 from ..utils import user_generator
 
 class TestSetUp(APITestCase):
-    def setUp(self, user_id):
+    def setUp(self):
         self.register_url=reverse('register')
         self.login_url=reverse('token_obtain_pair')
         self.refresh_token_url=reverse('token_refresh')
