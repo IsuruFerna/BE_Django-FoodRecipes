@@ -132,23 +132,29 @@ def search_by(request):
             status=404
         )
 
-
+# add new meal 
+# /recipers/add/
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_meal(request):
-    # if request.method == 'POST':
+
+    # get data as a copy and modify according to the category and logged user
+    data = request.data.copy()
+
     user = CustomUser.objects.get(id=request.user.id)
-    category = Category()
+    category = Category.objects.filter(strCategory=data['strCategory']).first()
 
-    meal_serializer = MealSerializer(request.data)
+    data["user"] = user
+    data["strCategory"] = category
 
-    if meal_serializer.is_valid: 
-        print(meal_serializer.validated_data)
+    # check data validity before saving
+    meal_serializer = MealSerializer(data=data)
+    if not meal_serializer.is_valid(): 
+
+        return Response(meal_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    
-        
-    print(f"this is the user {user}")
+    # save data
+    Meal.objects.create(**data)
 
-
-    return Response(status=status.HTTP_200_OK)
+    return Response(meal_serializer.data, status=status.HTTP_200_OK)
 

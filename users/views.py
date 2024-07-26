@@ -7,6 +7,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, serializers
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth.hashers import make_password
+
 from .serializers import CustomUserSerializer, ModifyUserSerializer
 from .models import CustomUser
 from .utils import ResponseUser
@@ -34,7 +36,9 @@ def getRoutes(request):
 """
 @api_view(['POST'])
 def user_register_view(request):
-    serializer = CustomUserSerializer(data=request.data)
+    data = request.data.copy()
+    data['password'] = make_password(data['password'])
+    serializer = CustomUserSerializer(data=data)
 
     if serializer.is_valid():
 

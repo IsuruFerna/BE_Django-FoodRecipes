@@ -76,7 +76,7 @@ REST_FRAMEWORK = {
 
 # documentation: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
     "ROTATE_REFRESH_TOKENS": True, # while this is true generates new refresh token at each time when the user logs in or each time when token gets refresh. 
 
