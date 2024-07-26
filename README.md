@@ -3,7 +3,12 @@
 It's a Food Recipe application currently developing for education purposes
 
 ### IMPORTANT!!!
-make sure to import categories first and then meals. Otherwise, meals can't make relations with categories, so meals will not saved in DB
+
+make sure to import users and categories first and then meals. Otherwise, meals can't make relations with categories, so meals will be not saved in DB
+
+## Import fake users
+
+`python manage.py import_users`
 
 ## Import categories data from an Open-Source API
 
@@ -14,4 +19,5 @@ make sure to import categories first and then meals. Otherwise, meals can't make
 `python manage.py import_meals`
 
 ## Front-end - under development
+
 Repo: https://github.com/IsuruFerna/FE_React-FoodRecipes/tree/development
