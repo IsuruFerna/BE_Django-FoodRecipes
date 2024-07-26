@@ -26,7 +26,18 @@ class CustomUserSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(required=True)
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+
+class CreatUserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(required=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+    email = serializers.EmailField(required=False)
+    
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
         
 
 class ModifyUserSerializer(serializers.ModelSerializer):

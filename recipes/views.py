@@ -8,18 +8,18 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-
+from rest_framework import status
 
 import random
 
+from users.models import CustomUser
 from recipes.models import Category, Meal
 from .serializers import MealSerializer
-
 
 # gets all the meals with paginator
 # /recipes/?page_num=1&per_page=10
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def all_meals(request):
     meals = Meal.objects.all().order_by('strMeal')
 
@@ -31,17 +31,17 @@ def all_meals(request):
     return paginator.get_paginated_response(serialized_meals.data)
 
 
-
 # gets random 10 meals
 # /recipes/random/
-def random_ten_meals(request):
+@api_view(['GET'])
+def random_meals(request):
     meals = Meal.objects.all()
     meals_amount = meals.count()
     random_nums = []
     random_meals = []
     
-    # controls util it generates 10 unique random numbers
-    while len(random_nums) < 10:
+    # controls util it generates 12 unique random numbers
+    while len(random_nums) < 12:
         generated_num = random.randrange(meals_amount)
         if not generated_num in random_nums:
             random_nums.append(generated_num)
@@ -65,7 +65,7 @@ def search_by(request):
     # returns param response as paginated json
     def serialized_paginator_response(data):
         page_number = int(request.GET.get('page_num', 1))
-        items_per_page = int(request.GET.get('per_page', 10))
+        items_per_page = int(request.GET.get('per_page', 12))
 
         paginator = Paginator(data, items_per_page)
         page_obj = paginator.get_page(page_number)
@@ -131,3 +131,24 @@ def search_by(request):
     return JsonResponse({"error": "Missing query params"}, 
             status=404
         )
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_meal(request):
+    # if request.method == 'POST':
+    user = CustomUser.objects.get(id=request.user.id)
+    category = Category()
+
+    meal_serializer = MealSerializer(request.data)
+
+    if meal_serializer.is_valid: 
+        print(meal_serializer.validated_data)
+    
+    
+        
+    print(f"this is the user {user}")
+
+
+    return Response(status=status.HTTP_200_OK)
+

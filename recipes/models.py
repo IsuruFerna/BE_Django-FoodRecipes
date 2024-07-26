@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import CustomUser
+
 class Category(models.Model):
     idCategory = models.AutoField(primary_key=True)
     strCategory = models.CharField(max_length=64)
@@ -11,10 +13,11 @@ class Category(models.Model):
 
 
 class Meal(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    strCategory = models.ForeignKey(Category, on_delete=models.CASCADE)
     idMeal = models.AutoField(primary_key=True)
     strMeal = models.CharField(max_length=200)
     strDrinkAlternate = models.CharField(null=True, blank=True, max_length=64)
-    strCategory = models.ForeignKey(Category, on_delete=models.CASCADE)
     strArea = models.CharField(max_length=64, blank=True)
     strInstructions =  models.TextField(max_length=5000)
     strMealThumb =  models.URLField(blank=True)
