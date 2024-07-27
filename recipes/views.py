@@ -170,7 +170,7 @@ def meal_edit_delete(request, meal_id):
     meal_user = meal.user
     logged_user = request.user
 
-    # check weather user has access to modify his own listed data
+    # check weather the user has access to modify his own listed data
     if meal_user.id != logged_user.id:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -185,11 +185,7 @@ def meal_edit_delete(request, meal_id):
         meal_category = data['strCategory']
 
         if meal_category:
-            print(f"category is: {data['strCategory']}")
             category = Category.objects.filter(strCategory=meal_category).first()
-
-            print(f"new catogory: {category}")
-            print(f"set new category: {data['strCategory']}")
 
             if category is None:
                 custom_errors['Category error'] = "Provided category doesn't found. Please create a new category before adding it!"
@@ -197,7 +193,7 @@ def meal_edit_delete(request, meal_id):
             else:    
                 data['strCategory'] = category.strCategory
 
-        meal_serializer = MealSerializer(meal, data=data)
+        meal_serializer = MealSerializer(instance=meal, data=data)
         
         # validate data
         if not meal_serializer.is_valid():
@@ -205,26 +201,22 @@ def meal_edit_delete(request, meal_id):
             # update custom errors because if there is already an error in category, I don't want to loose that error from the 'custom_errors' dictionary
             custom_errors.update(meal_serializer.errors)
             return Response(custom_errors, status=status.HTTP_400_BAD_REQUEST)
-
-        else:
-            print("data valid")
         
-        meal_serializer.save()
         # update meal
-
-        
-        print(f"update meal")
-        print(f"meal saved")
-        print(f"modified data: {meal_serializer.data}")
+        meal_serializer.save()
 
         return Response({
-            "message": "Meal modified successfully!",
+            "message": "Meal updated successfully!",
             "data": meal_serializer.data
         }, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
-        print("this is patch req")
-        return Response(status=status.HTTP_200_OK)
+        # delete meal
+        meal.delete()
+
+        return Response({
+            "message": "Meal successfully deleted!"
+        }, status=status.HTTP_204_NO_CONTENT)
 
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
