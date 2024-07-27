@@ -48,8 +48,13 @@ def random_meals(request):
 
             # fills random meal corresponds the generated random number
             random_meals.append(meals[generated_num])
-
-    return JsonResponse(serialize('json', random_meals), safe=False)
+    
+    serialized_meals = MealSerializer(random_meals, many=True)
+    
+    return Response(
+        serialized_meals.data,
+        status=status.HTTP_200_OK
+    )
 
 # search meals by name and category
 # /recipers/search/?name=meal_name&category=meal_category

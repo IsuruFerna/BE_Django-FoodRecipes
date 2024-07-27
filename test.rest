@@ -59,6 +59,18 @@ GET http://127.0.0.1:8000/user/user/e32ad9a0-88ab-49cf-8654-05aa073858fb
 Content-Type: application/json
 Authorization: Bearer <your-token>
 
+
+###################################################################################################################################################################
+############# Recipes/ meals ##########################
+
+###
+# get meals
+GET http://127.0.0.1:8000/recipes/
+
+###
+# get random meals
+GET http://127.0.0.1:8000/recipes/random/
+
 ###
 # post meal
 POST http://127.0.0.1:8000/recipes/add/
