@@ -15,6 +15,7 @@ import random
 from users.models import CustomUser
 from recipes.models import Category, Meal
 from .serializers import MealSerializer
+from utils.utils import paginator_response
 
 # gets all the meals with paginator
 # /recipes/?page_num=1&per_page=10
@@ -23,12 +24,7 @@ from .serializers import MealSerializer
 def all_meals(request):
     meals = Meal.objects.all().order_by('strMeal')
 
-    # sets pagination using django_rest and it's global settings from the settings.py file under REST_FRAMEWORK list
-    paginator = PageNumberPagination()
-    paginated_meals = paginator.paginate_queryset(meals, request)
-    serialized_meals = MealSerializer(paginated_meals, many=True)
-
-    return paginator.get_paginated_response(serialized_meals.data)
+    return paginator_response(meals, request, MealSerializer)
 
 
 # gets random 10 meals
@@ -58,6 +54,7 @@ def random_meals(request):
 
 # search meals by name and category
 # /recipers/search/?name=meal_name&category=meal_category
+@api_view(['GET'])
 def search_by(request):
     
     # required_parm_fields = ("name", "category")
@@ -67,26 +64,6 @@ def search_by(request):
     meal_name = request.GET.get('name')
     meal_category = request.GET.get('category')
 
-    # returns param response as paginated json
-    def serialized_paginator_response(data):
-        page_number = int(request.GET.get('page_num', 1))
-        items_per_page = int(request.GET.get('per_page', 12))
-
-        paginator = Paginator(data, items_per_page)
-        page_obj = paginator.get_page(page_number)
-
-        serialized_data = serialize('json', page_obj)
-    
-        return JsonResponse({
-            'data': serialized_data,
-            'meta': {
-                'page': page_obj.number,
-                'per_page': items_per_page,
-                'total_pages': paginator.num_pages,
-                'total_items': paginator.count
-            }
-        })
-    
     if meal_name and meal_category:
         # filters and gets as a list of categorise according to name similarities
         categories = Category.objects.filter(strCategory__contains=meal_category)
@@ -97,14 +74,14 @@ def search_by(request):
             for category in categories:
                 meals.extend(Meal.objects.filter(Q(strCategory__strCategory__contains=meal_category) & 
                                                  Q(strMeal__contains=meal_name)))
-
-            return serialized_paginator_response(meals)
+                
+            return paginator_response(meals, request, MealSerializer)
 
         # when no meal found with the provided name and category
         if not meals:
             return JsonResponse({"message": f"No meal found for corresponding name: '{meal_name}' and category: '{meal_category}'"}, status=404)
-        
-        return serialized_paginator_response(meals)       
+          
+        return paginator_response(meals, request, MealSerializer)    
     
     if meal_name:
         meals = Meal.objects.filter(strMeal__contains=meal_name).order_by('strMeal')
@@ -113,8 +90,8 @@ def search_by(request):
         if not meals:
             print("running inside statement")
             return JsonResponse({"message": f"No meal found for: {meal_name}"}, status=404)
-        
-        return serialized_paginator_response(meals)
+
+        return paginator_response(meals, request, MealSerializer)
         
 
     if meal_category:
@@ -127,7 +104,7 @@ def search_by(request):
             for category in categories:
                 meals.extend(Meal.objects.filter(strCategory=category))
 
-            return serialized_paginator_response(meals)
+            return paginator_response(meals, request, MealSerializer)
         
         # when thre are no categories for provide category
         return JsonResponse({"message": f"No category found for: {meal_category}"}, status=404)
@@ -222,7 +199,6 @@ def meal_edit_delete(request, meal_id):
         return Response({
             "message": "Meal successfully deleted!"
         }, status=status.HTTP_204_NO_CONTENT)
-
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
