@@ -21,13 +21,12 @@ def populate_category_data():
                     strCategoryDescription=category['strCategoryDescription']
                 )
 
-                # print("this is category :", category)
+                try:
+                    current_category.save()
+                    print(f"Added: {category['strCategory']}")
 
-                success = current_category.save()
-                if not success:
-                    print(f"something went wrong at {category}")
-                else:
-                    print(f"Added")
+                except Exception as e:
+                    print(f"something went wrong at {category}. Error: {str(e)}")
 
 
 class Command(BaseCommand):

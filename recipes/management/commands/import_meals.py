@@ -53,8 +53,12 @@ def populate_meal_data(firstLetter):
                         print(dict(current_meal.errors))
                         print(f"modal cant be saved! user: {random_user.id}")
                     else:
-                        print("modal saved")
-                        current_meal.save()
+                        try:
+                            current_meal.save()
+                            print(f"added: {current_meal['strMeal']}")
+                        
+                        except Exception as e:
+                            print(f"something wrong at: {current_meal['strMeal']}! Error: {str(e)}")
  
         else:
             print(f"No meals found beginning with the letter '{firstLetter}'")

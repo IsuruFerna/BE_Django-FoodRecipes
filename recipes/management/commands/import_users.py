@@ -1,8 +1,10 @@
 from django.core.management.base import BaseCommand
+from django.contrib.auth.hashers import make_password
 from django.db.utils import IntegrityError
 from faker import Faker
 from rest_framework import serializers
 from typing import Any
+
 
 from users.serializers import CreatUserSerializer
 
@@ -23,6 +25,9 @@ class Command(BaseCommand):
                 "email":faker.email(),
                 "password":"Pass123!"
             }
+
+            # this is for testing data. Really not necessary(it's visible up there XD)
+            user_data['password'] = make_password(user_data['password'])
             user_serializer = CreatUserSerializer(data=user_data)
 
             if user_serializer.is_valid():

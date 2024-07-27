@@ -4,7 +4,7 @@ It's a Food Recipe application currently developing for education purposes
 
 ### IMPORTANT!!!
 
-make sure to import users and categories first and then meals. Otherwise, meals can't make relations with categories, so meals will be not saved in DB
+make sure to import users and categories first and then meals. Otherwise, meals can't make relations with categories and users, so meals will be not saved in DB
 
 ## Import fake users
 
