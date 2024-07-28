@@ -37,7 +37,10 @@ def getRoutes(request):
 @api_view(['POST'])
 def user_register_view(request):
     data = request.data.copy()
-    data['password'] = make_password(data['password'])
+    
+    if 'password' in data and data['password']:
+        data['password'] = make_password(data['password'])
+
     serializer = CustomUserSerializer(data=data)
 
     if serializer.is_valid():
