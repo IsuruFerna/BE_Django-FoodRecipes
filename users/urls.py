@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-
+app_name = "users"
 urlpatterns = [
     path("", views.getRoutes),
     # path("login", views.login_view, name="login"),

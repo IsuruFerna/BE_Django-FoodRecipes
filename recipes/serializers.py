@@ -19,3 +19,14 @@ class MealSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meal
         fields = '__all__'
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(
+        slug_field='id',
+        read_only=True
+    )
+
+    class Meta:
+        model = Category
+        fields = '__all__'

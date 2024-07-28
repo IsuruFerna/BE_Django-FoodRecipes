@@ -14,7 +14,7 @@ import random
 
 from users.models import CustomUser
 from recipes.models import Category, Meal
-from .serializers import MealSerializer
+from .serializers import CategorySerializer, MealSerializer
 from utils.utils import paginator_response
 
 # gets all the meals with paginator
@@ -53,7 +53,7 @@ def random_meals(request):
     )
 
 # search meals by name and category
-# /recipers/search/?name=meal_name&category=meal_category
+# /recipes/search/?name=meal_name&category=meal_category
 @api_view(['GET'])
 def search_by(request):
     
@@ -114,8 +114,26 @@ def search_by(request):
             status=status.HTTP_404_NOT_FOUND
         )
 
+# add new category
+# /recipes/add-category/
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_category(request):
+    
+    category = request.data
+    category['user'] = request.user.id
+
+    serialized_category = CategorySerializer(data=category)
+
+    if not serialized_category.is_valid():
+        return Response(serialized_category.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    serialized_category.save()
+
+    return Response(serialized_category.data, status=status.HTTP_201_CREATED)
+
 # add new meal 
-# /recipers/add/
+# /recipes/add-recipe/
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_meal(request):

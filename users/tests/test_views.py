@@ -1,6 +1,6 @@
 from .test_setup import TestSetUp
 from ..models import CustomUser
-from faker import Faker
+
 from utils.utils import user_generator
 
 

@@ -1,4 +1,5 @@
 from faker import Faker
+from faker_food import FoodProvider
 from rest_framework.pagination import PageNumberPagination
 
 # paginator response for meal views
@@ -21,3 +22,39 @@ def user_generator():
         'username': faker.user_name(),
         'password': faker.password()
     }
+
+def category_generator():
+    fake = Faker()
+    fake.add_provider(FoodProvider)
+
+    return {
+        "user": "",
+        "strCategory":fake.ethnic_category(),
+        "strCategoryTumb":fake.url(),
+        "strCategoryDescription":fake.dish_description()                              
+    }
+
+def meal_generator(user, category):
+    fake = Faker()
+    fake.add_provider(FoodProvider)
+
+    return {
+        "user": user,
+        "strMeal": fake.dish(),
+        "strDrinkAlternate": "",
+        "strCategory": category,
+        "strArea": fake.country(),
+        "strInstructions": fake.dish_description(),
+        "strMealThumb": fake.url(),
+        "strTags": "Meat,Stew",
+        "strYoutube": fake.url(),
+        "strIngredient1": fake.ingredient(),
+        "strIngredient2": fake.ingredient(), 
+        "strIngredient3": "", 
+        "strIngredient4": "", 
+        "strMeasure1": fake.metric_measurement(),
+        "strMeasure2": fake.measurement_size(),
+        "strSource": fake.url(),
+    }
+
+

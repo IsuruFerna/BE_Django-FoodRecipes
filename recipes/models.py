@@ -6,8 +6,9 @@ from users.models import CustomUser
 
 class Category(models.Model):
     idCategory = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="categories")
     strCategory = models.CharField(max_length=64)
-    strCategoryTumb = models.URLField()
+    strCategoryTumb = models.URLField(max_length=300)
     strCategoryDescription = models.TextField()
 
     def __str__(self):
