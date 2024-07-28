@@ -107,11 +107,11 @@ def search_by(request):
             return paginator_response(meals, request, MealSerializer)
         
         # when thre are no categories for provide category
-        return JsonResponse({"message": f"No category found for: {meal_category}"}, status=404)
+        return Response({"message": f"No category found for: {meal_category}"}, status=status.HTTP_404_NOT_FOUND)
     
     # returns when request doesn't match with any required params
-    return JsonResponse({"error": "Missing query params"}, 
-            status=404
+    return Response({"error": "Missing query params"}, 
+            status=status.HTTP_404_NOT_FOUND
         )
 
 # add new meal 
