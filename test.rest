@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ###
-# access token
+# login - access token
 POST http://127.0.0.1:8000/user/api/token/
 Content-Type: application/json
 
@@ -56,5 +56,180 @@ Authorization: Bearer <your-token>
 ###
 # get user with ID
 GET http://127.0.0.1:8000/user/user/e32ad9a0-88ab-49cf-8654-05aa073858fb
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+
+###################################################################################################################################################################
+############# Recipes/ meals ##########################
+
+###
+# get meals
+GET http://127.0.0.1:8000/recipes/
+
+###
+# get random meals
+GET http://127.0.0.1:8000/recipes/random/
+
+###
+# post category
+POST http://127.0.0.1:8000/recipes/category/
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+{
+    "strCategory":"Pizza",
+    "strCategoryTumb":"https://www.simplyrecipes.com/thmb/KE6iMblr3R2Db6oE8HdyVsFSj2A=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2019__09__easy-pepperoni-pizza-lead-3-1024x682-583b275444104ef189d693a64df625da.jpg",
+    "strCategoryDescription":"Pizza is a traditional Italian dish typically consisting of a flat base of leavened wheat-based dough topped with tomato, cheese, and other ingredients, baked at a high temperature, traditionally in a wood-fired oven"
+}
+
+###
+# get category
+GET http://127.0.0.1:8000/recipes/category_get/<uuid:category_id>
+
+###
+# edit category data
+PATCH http://127.0.0.1:8000/recipes/category/<uuid:category_id>
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+{
+    "strCategory":"Pizza-neme",
+    "strCategoryTumb":"https://www.simplyrecipes.com/thmb/KE6iMblr3R2Db6oE8HdyVsFSj2A=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2019__09__easy-pepperoni-pizza-lead-3-1024x682-583b275444104ef189d693a64df625da.jpg",
+    "strCategoryDescription":"editeddddddddddddddddddddddddddddddddddddddd n"
+}
+
+###
+# delete category
+DELETE http://127.0.0.1:8000/recipes/category/<uuid:category_id>
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+###
+# post meal
+POST http://127.0.0.1:8000/recipes/add/
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+{
+    "strCategory": "Vegan",
+    "strMeal": "Beef Meal",
+    "strDrinkAlternate": "",
+    "strArea": "",
+    "strInstructions": "Cook the beef...",
+    "strMealThumb": "",
+    "strTags": "",
+    "strYoutube": "",
+    "strIngredient1": "Beef",
+    "strIngredient2": "", 
+    "strIngredient3": "", 
+    "strIngredient4": "", 
+    "strIngredient5": "", 
+    "strIngredient6": "", 
+    "strIngredient7": "", 
+    "strIngredient8": "", 
+    "strIngredient9": "", 
+    "strIngredient10": "", 
+    "strIngredient11": "", 
+    "strIngredient12": "", 
+    "strIngredient13": "", 
+    "strIngredient14": "", 
+    "strIngredient15": "", 
+    "strIngredient16": "", 
+    "strIngredient17": "", 
+    "strIngredient18": "", 
+    "strIngredient19": "", 
+    "strIngredient20": "", 
+    "strMeasure1": "1 lb",
+    "strMeasure2": "", 
+    "strMeasure3": "", 
+    "strMeasure4": "", 
+    "strMeasure5": "", 
+    "strMeasure6": "", 
+    "strMeasure7": "", 
+    "strMeasure8": "", 
+    "strMeasure9": "", 
+    "strMeasure10": "", 
+    "strMeasure11": "", 
+    "strMeasure12": "", 
+    "strMeasure13": "", 
+    "strMeasure14": "", 
+    "strMeasure15": "", 
+    "strMeasure16": "", 
+    "strMeasure17": "", 
+    "strMeasure18": "", 
+    "strMeasure19": "", 
+    "strMeasure20": "", 
+    "strSource": "",
+    "strImageSource": "",
+    "strCreativeCommonsConfirmed": false,
+    "dateModified": "2024-07-26T22:22:12Z"
+}
+
+###
+# edit meal data
+PATCH http://127.0.0.1:8000/recipes/<uuid:meal_id>
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+{
+  "strCategory": "Goat",
+  "strMeal": "Beef Meal",
+  "strDrinkAlternate": "",
+  "strArea": "",
+  "strInstructions": "Cook the beef...",
+  "strMealThumb": "",
+  "strTags": "",
+  "strYoutube": "",
+  "strIngredient1": "Beef",
+  "strIngredient2": "something",
+  "strIngredient3": "",
+  "strIngredient4": "",
+  "strIngredient5": "wwwwwwwwwwwwwwwwwwwwwww",
+  "strIngredient6": "",
+  "strIngredient7": "",
+  "strIngredient8": "",
+  "strIngredient9": "",
+  "strIngredient10": "",
+  "strIngredient11": "",
+  "strIngredient12": "",
+  "strIngredient13": "",
+  "strIngredient14": "",
+  "strIngredient15": "",
+  "strIngredient16": "",
+  "strIngredient17": "cccccccccccccccccccccc",
+  "strIngredient18": "",
+  "strIngredient19": "",
+  "strIngredient20": "",
+  "strMeasure1": "1 lb",
+  "strMeasure2": "",
+  "strMeasure3": "",
+  "strMeasure4": "",
+  "strMeasure5": "",
+  "strMeasure6": "",
+  "strMeasure7": "",
+  "strMeasure8": "",
+  "strMeasure9": "",
+  "strMeasure10": "",
+  "strMeasure11": "",
+  "strMeasure12": "",
+  "strMeasure13": "",
+  "strMeasure14": "",
+  "strMeasure15": "",
+  "strMeasure16": "",
+  "strMeasure17": "",
+  "strMeasure18": "",
+  "strMeasure19": "",
+  "strMeasure20": "",
+  "strSource": "",
+  "strImageSource": "",
+  "strCreativeCommonsConfirmed": false,
+  "dateModified": "2024-07-26T22:22:12Z"
+}
+
+
+###
+# delete meal data
+DELETE http://127.0.0.1:8000/recipes/<uuid:meal_id>
 Content-Type: application/json
 Authorization: Bearer <your-token>

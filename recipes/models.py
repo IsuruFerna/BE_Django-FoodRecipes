@@ -1,9 +1,14 @@
 from django.db import models
 
+import uuid
+
+from users.models import CustomUser
+
 class Category(models.Model):
-    idCategory = models.AutoField(primary_key=True)
+    idCategory = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="categories")
     strCategory = models.CharField(max_length=64)
-    strCategoryTumb = models.URLField()
+    strCategoryTumb = models.URLField(max_length=300)
     strCategoryDescription = models.TextField()
 
     def __str__(self):
@@ -11,10 +16,11 @@ class Category(models.Model):
 
 
 class Meal(models.Model):
-    idMeal = models.AutoField(primary_key=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="meals")
+    strCategory = models.ForeignKey(Category, on_delete=models.CASCADE)
+    idMeal = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     strMeal = models.CharField(max_length=200)
     strDrinkAlternate = models.CharField(null=True, blank=True, max_length=64)
-    strCategory = models.ForeignKey(Category, on_delete=models.CASCADE)
     strArea = models.CharField(max_length=64, blank=True)
     strInstructions =  models.TextField(max_length=5000)
     strMealThumb =  models.URLField(blank=True)

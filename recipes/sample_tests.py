@@ -1,6 +1,11 @@
 from django.test import TestCase
 
 from .models import Meal, Category
+from django.urls import reverse
+
+REGISTER_URL=reverse('add_meal')
+EDIT_DELETE_URL=reverse('edit_delete_meal')
+
 
 # Create your tests here.
 class CategoryTestCase(TestCase):
