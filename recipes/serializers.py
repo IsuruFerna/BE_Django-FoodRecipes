@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Category, Meal
+from users.models import CustomUser
 
 # https://www.django-rest-framework.org/api-guide/relations/
 
@@ -24,7 +25,8 @@ class MealSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         slug_field='id',
-        read_only=True
+        queryset=CustomUser.objects.all(),
+        required=False
     )
 
     class Meta:

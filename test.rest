@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ###
-# access token
+# login - access token
 POST http://127.0.0.1:8000/user/api/token/
 Content-Type: application/json
 
@@ -70,6 +70,40 @@ GET http://127.0.0.1:8000/recipes/
 ###
 # get random meals
 GET http://127.0.0.1:8000/recipes/random/
+
+###
+# post category
+POST http://127.0.0.1:8000/recipes/category/
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+{
+    "strCategory":"Pizza",
+    "strCategoryTumb":"https://www.simplyrecipes.com/thmb/KE6iMblr3R2Db6oE8HdyVsFSj2A=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2019__09__easy-pepperoni-pizza-lead-3-1024x682-583b275444104ef189d693a64df625da.jpg",
+    "strCategoryDescription":"Pizza is a traditional Italian dish typically consisting of a flat base of leavened wheat-based dough topped with tomato, cheese, and other ingredients, baked at a high temperature, traditionally in a wood-fired oven"
+}
+
+###
+# get category
+GET http://127.0.0.1:8000/recipes/category_get/<uuid:category_id>
+
+###
+# edit category data
+PATCH http://127.0.0.1:8000/recipes/category/<uuid:category_id>
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+{
+    "strCategory":"Pizza-neme",
+    "strCategoryTumb":"https://www.simplyrecipes.com/thmb/KE6iMblr3R2Db6oE8HdyVsFSj2A=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2019__09__easy-pepperoni-pizza-lead-3-1024x682-583b275444104ef189d693a64df625da.jpg",
+    "strCategoryDescription":"editeddddddddddddddddddddddddddddddddddddddd n"
+}
+
+###
+# delete category
+DELETE http://127.0.0.1:8000/recipes/category/<uuid:category_id>
+Content-Type: application/json
+Authorization: Bearer <your-token>
 
 ###
 # post meal
