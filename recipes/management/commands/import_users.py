@@ -34,10 +34,10 @@ class Command(BaseCommand):
                # handle unique username
                 try:
                    user_serializer.save()
-                   print(f"{i}: user saved {user_serializer.validated_data["username"]}")
+                   print(f"{i}: user saved {user_serializer.validated_data['username']}")
 
                 except IntegrityError:
-                    print(f"error: {user_serializer.validated_data["username"]} already exsists!")
+                    print(f"error: {user_serializer.validated_data['username']} already exsists!")
                     raise serializers.ValidationError({"username": ["This username already exists."]})
             else:
               print(f"user_serializer does not valid!")
