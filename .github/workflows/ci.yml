@@ -36,7 +36,7 @@ jobs:
 
          - name: build and run docker compose
            run: |
-              docker-compose up
+              docker-compose up --build
            env:
               SECRET_KEY: ${{ secrets.SECRET_KEY }}
               POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
