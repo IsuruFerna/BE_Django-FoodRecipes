@@ -52,7 +52,7 @@ jobs:
 
          - name: Wait for Postgres to be ready
            run: |
-              until docker-compose exec my_postgres pg_isready; do sleep 1; done
+              until docker-compose exec -T my_postgres pg_isready; do sleep 1; done
 
          - name: Check Docker Compose logs
            #   uses: sudo-bot/action-docker-compose@latest
