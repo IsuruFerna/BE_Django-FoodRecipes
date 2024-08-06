@@ -166,7 +166,7 @@ WSGI_APPLICATION = 'recipes_be.wsgi.application'
 # }
 DATABASES = {
     'default': {
-      
+        
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_NAME', config('POSTGRES_NAME')),
         'USER': os.getenv('POSTGRES_USER', config('POSTGRES_USER')),
