@@ -60,7 +60,7 @@ jobs:
            #   with:
            #      # https://docs.docker.com/compose/reference/overview/
            #      cli-args: logs
-           run: docker-compose up
+           run: docker-compose logs
 
          - name: Run Django unit tests
            run: |
