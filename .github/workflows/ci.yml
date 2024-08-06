@@ -74,11 +74,11 @@ jobs:
          #      docker-compose ps
          #      docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB || echo "Postgres is not ready"
 
-         - name: Run Migrations
-           run: |
-              docker-compose exec web python manage.py makemigrations
-              docker-compose exec web python manage.py migrate
+         # - name: Run Migrations
+         #   run: |
+         #      docker-compose exec web python manage.py makemigrations
+         #      docker-compose exec web python manage.py migrate
 
          - name: Run Django unit tests
            run: |
-              python3 manage.py test
+              docker-compose exec web python3 manage.py test
