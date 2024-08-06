@@ -36,7 +36,7 @@ jobs:
 
          - name: build and run docker compose
            run: |
-              docker-compose up -d --buid
+              docker-compose up
 
          - name: Check Docker Compose logs db
            run: docker-compose logs my_postgres
