@@ -38,11 +38,6 @@ jobs:
            run: |
               docker-compose up -d --buid
 
-         - name: make migrations
-           run: |
-              docker-compose exec web python manage.py makemigrations
-              docker-compose exec web python manage.py migrate
-
          - name: Check Docker Compose logs
            run: docker-compose logs my_postgres
 
