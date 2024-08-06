@@ -44,8 +44,8 @@ jobs:
               echo "POSTGRES_HOST: $POSTGRES_HOST"
               echo "POSTGRES_PORT: $POSTGRES_PORT"
 
-         - name: Print Environment Variables
-           run: printenv
+         # - name: Print Environment Variables
+         #   run: printenv
 
          - name: build and run docker compose
            run: |
@@ -59,25 +59,25 @@ jobs:
               POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
               POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
-         # - name: Check Docker Compose logs db
-         #   run: docker-compose logs my_postgres
+         - name: Check Docker Compose logs db
+           run: docker-compose logs my_postgres
 
-         # - name: Check Docker Compose logs web
-         #   run: docker-compose logs web
+         - name: Check Docker Compose logs web
+           run: docker-compose logs web
 
-         # - name: Wait for Postgres to be ready
-         #   run: |
-         #      timeout 2m bash -c 'until docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB; do sleep 1; done'
+         - name: Wait for Postgres to be ready
+           run: |
+              timeout 2m bash -c 'until docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB; do sleep 1; done'
 
-         # - name: Check container status
-         #   run: |
-         #      docker-compose ps
-         #      docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB || echo "Postgres is not ready"
+         - name: Run Migrations
+           run: |
+              docker-compose exec web python manage.py makemigrations
+              docker-compose exec web python manage.py migrate
 
-         # - name: Run Migrations
-         #   run: |
-         #      docker-compose exec web python manage.py makemigrations
-         #      docker-compose exec web python manage.py migrate
+         - name: Check container status
+           run: |
+              docker-compose ps
+              docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB || echo "Postgres is not ready"
 
          - name: Run Django unit tests
            run: |
