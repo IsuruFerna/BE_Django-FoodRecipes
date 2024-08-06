@@ -46,6 +46,9 @@ jobs:
               POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
               POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
+         - name: Print Environment Variables
+           run: printenv
+
          - name: Check Docker Compose logs db
            run: docker-compose logs my_postgres
 
