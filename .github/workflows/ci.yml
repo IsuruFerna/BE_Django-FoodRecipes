@@ -43,6 +43,13 @@ jobs:
               POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
               POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
 
+         - name: Wait for Postgres to be ready
+           run: |
+              until docker-compose exec my_postgres pg_isready; do sleep 1; done
+
+         - name: Check Docker Compose logs
+           run: docker-compose logs
+
          - name: Run Django unit tests
            run: |
               python3 manage.py test
