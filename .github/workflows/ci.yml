@@ -44,20 +44,20 @@ jobs:
               echo "POSTGRES_HOST: $POSTGRES_HOST"
               echo "POSTGRES_PORT: $POSTGRES_PORT"
 
-         # - name: build and run docker compose
-         #   run: |
-         #      docker-compose up --build -d
-         #   env:
-         #      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-         #      POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
-         #      POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
-         #      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-         #      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-         #      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-         #      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-
          - name: Print Environment Variables
            run: printenv
+
+         - name: build and run docker compose
+           run: |
+              docker-compose up --build -d
+           env:
+              SECRET_KEY: ${{ secrets.SECRET_KEY }}
+              POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
+              POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
+              POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+              POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+              POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+              POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
          # - name: Check Docker Compose logs db
          #   run: docker-compose logs my_postgres
