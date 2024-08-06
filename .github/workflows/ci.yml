@@ -38,17 +38,20 @@ jobs:
            run: |
               docker-compose up -d --buid
 
-         - name: Check Docker Compose logs
+         - name: Check Docker Compose logs db
            run: docker-compose logs my_postgres
 
-         - name: Wait for Postgres to be ready
-           run: |
-              timeout 2m bash -c 'until docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB; do sleep 1; done'
+         - name: Check Docker Compose logs web
+           run: docker-compose logs web
 
-         - name: Check container status
-           run: |
-              docker-compose ps
-              docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB || echo "Postgres is not ready"
+         # - name: Wait for Postgres to be ready
+         #   run: |
+         #      timeout 2m bash -c 'until docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB; do sleep 1; done'
+
+         # - name: Check container status
+         #   run: |
+         #      docker-compose ps
+         #      docker-compose exec -T my_postgres pg_isready -U $POSTGRES_USER -d $POSTGRES_DB || echo "Postgres is not ready"
 
          - name: Run Django unit tests
            run: |
