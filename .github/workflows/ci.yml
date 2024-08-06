@@ -13,12 +13,19 @@ jobs:
          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
       steps:
-         - uses: actions/checkout@v2
+         - uses: actions/checkout@v4
 
          - name: Set up Python
            uses: actions/setup-python@v2
            with:
               python-version: "3.12"
+
+         # https://github.com/marketplace/actions/action-docker-compose
+         - name: Install docker
+           uses: sudo-bot/action-docker-compose@latest
+           with:
+              # https://docs.docker.com/compose/reference/overview/
+              cli-args: "up"
 
          - name: Run docker-compose
            run: docker-compose up -d
