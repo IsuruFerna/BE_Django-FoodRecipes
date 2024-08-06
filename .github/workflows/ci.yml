@@ -20,20 +20,20 @@ jobs:
            with:
               python-version: "3.12"
 
+         # - name: Run docker-compose
+         #   run: docker-compose up -d
+
+         - name: Install dependencies
+           run: |
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+
          # https://github.com/marketplace/actions/action-docker-compose
          - name: Install docker
            uses: sudo-bot/action-docker-compose@latest
            with:
               # https://docs.docker.com/compose/reference/overview/
               cli-args: "up"
-
-         - name: Run docker-compose
-           run: docker-compose up -d
-
-         - name: Install dependencies
-           run: |
-              python -m pip install --upgrade pip
-              pip install -r requirements.txt
 
          - name: Run Django unit tests
            run: |
