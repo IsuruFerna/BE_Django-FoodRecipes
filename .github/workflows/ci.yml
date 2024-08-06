@@ -6,11 +6,6 @@ jobs:
       runs-on: ubuntu-latest
       env:
          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-         POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
-         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-         POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-         POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
       steps:
          - uses: actions/checkout@v4
@@ -33,7 +28,13 @@ jobs:
            uses: sudo-bot/action-docker-compose@latest
            with:
               # https://docs.docker.com/compose/reference/overview/
-              cli-args: "up"
+              cli-args: up -d
+           env:
+              POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
+              POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+              POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+              POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+              POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
          - name: Run Django unit tests
            run: |
