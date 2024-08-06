@@ -29,12 +29,19 @@ jobs:
               python -m pip install --upgrade pip
               pip install -r requirements.txt
 
+         - name: Install docker
+           run: |
+              sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+
          # https://github.com/marketplace/actions/action-docker-compose
          - name: Run docker compose
-           uses: sudo-bot/action-docker-compose@latest
-           with:
-              # https://docs.docker.com/compose/reference/overview/
-              cli-args: up -d
+           #   uses: sudo-bot/action-docker-compose@latest
+           #   with:
+           #      # https://docs.docker.com/compose/reference/overview/
+           #      cli-args: up -d
+           run: |
+              docker-compose up -d
            env:
               POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
               POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -48,7 +55,11 @@ jobs:
               until docker-compose exec my_postgres pg_isready; do sleep 1; done
 
          - name: Check Docker Compose logs
-           run: docker-compose logs
+           #   uses: sudo-bot/action-docker-compose@latest
+           #   with:
+           #      # https://docs.docker.com/compose/reference/overview/
+           #      cli-args: logs
+           run: docker-compose up
 
          - name: Run Django unit tests
            run: |
