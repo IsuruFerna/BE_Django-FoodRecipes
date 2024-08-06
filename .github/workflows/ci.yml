@@ -1,11 +1,6 @@
 name: Testing
 on: push
 
-runs:
-   using: "composite"
-   steps:
-      - name: Setting docker compose
-
 jobs:
    test_project:
       runs-on: ubuntu-latest
