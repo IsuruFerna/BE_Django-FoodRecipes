@@ -42,7 +42,7 @@ jobs:
 
          - name: Check Docker Compose logs db
            run: |
-              docker-compose logs my_postgres
+              docker-compose logs db
 
          - name: Check Docker Compose logs web
            run: |
