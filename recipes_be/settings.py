@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 
 import os
+import environ
+
+env = environ.Env()
+environ.Env.read_env() # read .env files
+
+IS_PRODUCTION = os.getenv('GITHUB_ACTIONS') == 'true'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -168,11 +174,11 @@ DATABASES = {
     'default': {
         
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_NAME', config('POSTGRES_NAME')),
-        'USER': os.getenv('POSTGRES_USER', config('POSTGRES_USER')),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', config('POSTGRES_PASSWORD')),
-        'HOST': os.getenv('POSTGRES_HOST', config('POSTGRES_HOST')),
-        'PORT': os.getenv('POSTGRES_PORT', config('POSTGRES_PORT')),
+        'NAME': os.getenv('POSTGRES_NAME', env('POSTGRES_NAME')),
+        'USER': os.getenv('POSTGRES_USER', env('POSTGRES_USER')),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', env('POSTGRES_PASSWORD')),
+        'HOST': os.getenv('POSTGRES_HOST', env('POSTGRES_HOST')),
+        'PORT': os.getenv('POSTGRES_PORT', env('POSTGRES_PORT')),
     }
 }
 
