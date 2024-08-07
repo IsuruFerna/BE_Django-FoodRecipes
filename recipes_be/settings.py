@@ -32,7 +32,7 @@ from decouple import config
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # uses keys from github secrets or local ".env" 
-SECRET_KEY = os.getenv('SECRET_KEY', config('SECRET_KEY')) 
+SECRET_KEY = os.getenv('SECRET_KEY', env('SECRET_KEY')) 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
