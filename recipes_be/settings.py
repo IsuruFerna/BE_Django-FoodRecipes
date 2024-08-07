@@ -13,7 +13,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 
 import os
+import environ
 
+env = environ.Env()
+environ.Env.read_env() # read .env files
+
+IS_PRODUCTION = os.getenv('GITHUB_ACTIONS') == 'true'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,18 +31,14 @@ from decouple import config
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-try:
-    # reads setted secret key in github secrets to run actions
-    SECRET_KEY = os.environ['SECRET_KEY']
-except KeyError:
-    SECRET_KEY = config('SECRET_KEY')
-
+# uses keys from github secrets or local ".env" 
+SECRET_KEY = os.getenv('SECRET_KEY', env('SECRET_KEY')) 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# only for development process
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = "users.CustomUser"
 
@@ -56,7 +57,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist', # this is how we configure refresh token blacklist
 
-    # 'users.apps.BaseConfig', # only if you do not want to use separate app. after that migrate
+    # 'users.apps.BaseConfig', # only if you do not want to use separate app(with a directory). after that migrate
 
     "corsheaders",
 ]
@@ -163,10 +164,20 @@ WSGI_APPLICATION = 'recipes_be.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default': {  
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_NAME', env('POSTGRES_NAME')),
+        'USER': os.getenv('POSTGRES_USER', env('POSTGRES_USER')),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', env('POSTGRES_PASSWORD')),
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 
