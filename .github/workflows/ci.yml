@@ -1,6 +1,16 @@
 name: Testing
 on: push
 
+env:
+   SECRET_KEY: ${{ secrets.SECRET_KEY }}
+   POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
+   POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
+   POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+   POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+   POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+   POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+   TEST: "Hello"
+
 jobs:
    test_project:
       runs-on: ubuntu-latest
@@ -8,14 +18,6 @@ jobs:
       # run sequentially
       strategy:
          max-parallel: 1
-      env:
-         SECRET_KEY: ${{ secrets.SECRET_KEY }}
-         POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
-         POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
-         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-         POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-         POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
       steps:
          - uses: actions/checkout@v2
@@ -52,6 +54,7 @@ jobs:
               echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
               echo "POSTGRES_HOST: $POSTGRES_HOST"
               echo "POSTGRES_PORT: $POSTGRES_PORT"
+              echo "test: $TEST"
 
          # - name: Print Environment Variables
          #   run: printenv
@@ -59,14 +62,6 @@ jobs:
          - name: build and run docker compose
            run: |
               docker-compose up --build -d
-           env:
-              SECRET_KEY: ${{ secrets.SECRET_KEY }}
-              POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
-              POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
-              POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-              POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-              POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-              POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
          - name: Check Docker Compose logs db
            run: docker-compose logs my_postgres
