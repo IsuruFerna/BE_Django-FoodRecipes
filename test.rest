@@ -84,8 +84,12 @@ Authorization: Bearer <your-token>
 }
 
 ###
+# get all the categories
+GET http://127.0.0.1:8000/recipes/categories/
+
+###
 # get category
-GET http://127.0.0.1:8000/recipes/category_get/<uuid:category_id>
+GET http://127.0.0.1:8000/recipes/category/<uuid:category_id>
 
 ###
 # edit category data
