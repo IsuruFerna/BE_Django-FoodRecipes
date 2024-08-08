@@ -6,11 +6,14 @@ from users.models import CustomUser
 
 # removing "read_only=False" and adding "queryset=Category.objects.all()" to let know the serializer to where to check to validate data
 class MealSerializer(serializers.ModelSerializer):
-    # user = serializers.UUIDField(required=False)
+    user = serializers.UUIDField(required=False)
     strCategory = serializers.SlugRelatedField(
         slug_field='strCategory',
-        queryset=Category.objects.all()
+        # queryset=Category.objects.all()
+        read_only=True
     )
+
+    # strCategory = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
 
     user = serializers.SlugRelatedField(
         read_only=True,

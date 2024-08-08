@@ -1,33 +1,33 @@
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.serializers import serialize
-from django.core.paginator import Paginator
 from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
 import random
+import logging
 
 from users.models import CustomUser
 from recipes.models import Category, Meal
 from .serializers import CategorySerializer, MealSerializer
 from utils.utils import paginator_response
 
+logger = logging.getLogger(__name__)
+
 # gets all the meals with paginator
 # /recipes/?page_num=1&per_page=10
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
 def all_meals(request):
     meals = Meal.objects.all().order_by('strMeal')
 
     return paginator_response(meals, request, MealSerializer)
 
-# gets random 10 meals
+
+
+# gets random 12 meals
 # /recipes/random/
 @api_view(['GET'])
 def random_meals(request):
@@ -52,6 +52,8 @@ def random_meals(request):
         status=status.HTTP_200_OK
     )
 
+
+
 # search meals by name and category
 # /recipes/search/?name=meal_name&category=meal_category
 @api_view(['GET'])
@@ -63,6 +65,13 @@ def search_by(request):
 
     meal_name = request.GET.get('name')
     meal_category = request.GET.get('category')
+
+    # converts all the first letters to uppercase
+    if meal_name:
+        meal_name = meal_name.title()
+
+    if meal_category:
+        meal_category = meal_category.title()
 
     if meal_name and meal_category:
         # filters and gets as a list of categorise according to name similarities
@@ -79,7 +88,7 @@ def search_by(request):
 
         # when no meal found with the provided name and category
         if not meals:
-            return JsonResponse({"message": f"No meal found for corresponding name: '{meal_name}' and category: '{meal_category}'"}, status=404)
+            return JsonResponse({"message": f"No meal found for corresponding name: '{meal_name}' and category: '{meal_category}'"}, status=status.HTTP_404_NOT_FOUND)
           
         return paginator_response(meals, request, MealSerializer)    
     
@@ -117,92 +126,116 @@ def search_by(request):
 
 
 # add new meal 
-# /recipes/add-recipe/
+# /recipes/meal/
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_meal(request):
 
-    # get data as a copy and modify according to the category and logged user
-    data = request.data.copy()
-
+    # get data
+    data = request.data
     user = CustomUser.objects.get(id=request.user.id)
-    category = Category.objects.filter(strCategory=data['strCategory']).first()
 
-    data["user"] = user
-    data["strCategory"] = category
+    # sets category
+    incomming_category = data['strCategory']
+    meal_category = Category.objects.filter(strCategory=incomming_category.title()).first()
+
+    if not meal_category:
+        return Response(
+            {"error": f"Category '{incomming_category} does not exist."},
+            status=status.HTTP_404_NOT_FOUND         
+        )
 
     # check data validity before saving
     meal_serializer = MealSerializer(data=data)
     if not meal_serializer.is_valid(): 
-
         return Response(meal_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     # save data
-    meal = Meal.objects.create(**data)
-    saved_meal_serializer = MealSerializer(meal)
+    meal_serializer.save(user=user, strCategory=meal_category)
 
-    return Response(saved_meal_serializer.data, status=status.HTTP_200_OK)
+    return Response(meal_serializer.data, status=status.HTTP_200_OK)
 
 
-# edit or delete meal
-# /recipes/<uuid:id>
-@api_view(['DELETE', 'PATCH'])
-@permission_classes([IsAuthenticated])
-def meal_edit_delete(request, meal_id):
+# get, edit or delete meal
+# /recipes/meal/<uuid:id>
+@api_view(['GET', 'DELETE', 'PATCH'])
+def meal_view(request, meal_id):
 
-    meal = Meal.objects.get(pk=meal_id)
-    meal_user = meal.user
-    logged_user = request.user
+    # check if the given meal is already exsists in the db
+    try:
+        meal = Meal.objects.get(pk=meal_id)
 
-    # check weather the user has access to modify his own listed data
-    if meal_user.id != logged_user.id:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    except ObjectDoesNotExist:
+        return Response(
+            {"error": f"Meal does not found with Id: {meal_id}"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    # get request
+    if request.method == 'GET':
+        serialized_meal = MealSerializer(meal)
+        return Response(
+            serialized_meal.data,
+            status=status.HTTP_200_OK
+        )
+    
+    # patch and delete request
+    if request.user.is_authenticated:
 
-    if request.method == 'PATCH':
-        data = request.data.copy()
+        meal_user = meal.user
+        logged_user = request.user
 
-        print(f"this is data: {data}")
-        category = None
-        custom_errors = {}
+        # check weather the user has access to modify his own listed data
+        if meal_user.id != logged_user.id:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        # check if request data provided a category
-        meal_category = data['strCategory']
+        # patch request
+        if request.method == 'PATCH':
+            data = request.data
 
-        if meal_category:
-            category = Category.objects.filter(strCategory=meal_category).first()
+            # category = None
+            custom_errors = {}
 
-            if category is None:
-                custom_errors['Category error'] = "Provided category doesn't found. Please create a new category before adding it!"
+            # check if request data provided a category
+            meal_category = data['strCategory']
 
-            else:    
-                data['strCategory'] = category.strCategory
+            if meal_category:
+                category = Category.objects.filter(strCategory=meal_category.title()).first()
 
-        meal_serializer = MealSerializer(instance=meal, data=data)
-        
-        # validate data
-        if not meal_serializer.is_valid():
+                if not category:
+                    custom_errors['Category error'] = "Provided category doesn't found. Please create a new category before adding it!"
 
-            # update custom errors because if there is already an error in category, I don't want to loose that error from the 'custom_errors' dictionary
-            custom_errors.update(meal_serializer.errors)
-            return Response(custom_errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        # update meal
-        meal_serializer.save()
+                    return Response(custom_errors, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({
-            "message": "Meal updated successfully!",
-            "data": meal_serializer.data
-        }, status=status.HTTP_200_OK)
+            meal_serializer = MealSerializer(instance=meal, data=data, partial=True)
+            
+            # validate data
+            if not meal_serializer.is_valid():
 
-    if request.method == 'DELETE':
-        # delete meal
-        meal.delete()
+                # update custom errors because if there is already an error in category, I don't want to loose it from the 'custom_errors' dictionary
+                custom_errors.update(meal_serializer.errors)
+                return Response(custom_errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            # update meal
+            if category:
+                meal_serializer.save(strCategory=category)
+            else:
+                meal_serializer.save()
 
-        return Response({
-            "message": "Meal successfully deleted!"
-        }, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                meal_serializer.data,
+                status=status.HTTP_200_OK
+            )
 
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+        if request.method == 'DELETE':
+            # delete meal
+            meal.delete()
+
+            return Response({
+                "message": "Meal successfully deleted!"
+            }, status=status.HTTP_204_NO_CONTENT)
+
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 
