@@ -61,15 +61,8 @@ Authorization: Bearer <your-token>
 
 
 ###################################################################################################################################################################
-############# Recipes/ meals ##########################
+############# CATEGORIES ##########################
 
-###
-# get meals
-GET http://127.0.0.1:8000/recipes/
-
-###
-# get random meals
-GET http://127.0.0.1:8000/recipes/random/
 
 ###
 # post category
@@ -109,9 +102,21 @@ DELETE http://127.0.0.1:8000/recipes/category/<uuid:category_id>
 Content-Type: application/json
 Authorization: Bearer <your-token>
 
+
+###################################################################################################################################################################
+############# MEAL ##########################
+
+###
+# get meals
+GET http://127.0.0.1:8000/recipes/
+
+###
+# get random meals
+GET http://127.0.0.1:8000/recipes/random/
+
 ###
 # post meal
-POST http://127.0.0.1:8000/recipes/add/
+POST http://127.0.0.1:8000/recipes/meal/
 Content-Type: application/json
 Authorization: Bearer <your-token>
 
@@ -171,8 +176,12 @@ Authorization: Bearer <your-token>
 }
 
 ###
+# get meal by id
+GET http://127.0.0.1:8000/recipes/meal/3b94a8bd-a608-4309-9e71-a1da990fe3a8
+
+###
 # edit meal data
-PATCH http://127.0.0.1:8000/recipes/<uuid:meal_id>
+PATCH http://127.0.0.1:8000/recipes/meal/<uuid:meal_id>
 Content-Type: application/json
 Authorization: Bearer <your-token>
 
@@ -234,6 +243,6 @@ Authorization: Bearer <your-token>
 
 ###
 # delete meal data
-DELETE http://127.0.0.1:8000/recipes/<uuid:meal_id>
+DELETE http://127.0.0.1:8000/recipes/meal/<uuid:meal_id>
 Content-Type: application/json
 Authorization: Bearer <your-token>

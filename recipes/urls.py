@@ -2,15 +2,23 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # get all the meals
     path("", views.all_meals, name="all_meals"),
+
+    # get random 12 meals
     path("random/", views.random_meals, name="random_meals"),
+
+    # get meals by searching via params: ?name=meal_name&category=meal_category
     path("search/", views.search_by, name="search"),
+
+    # post: add new meal
     path("meal/", views.add_meal, name="add_meal"),
-  
-    path("<uuid:meal_id>", views.meal_edit_delete, name="meal_edit_delete"),
+
+    # get, patch, delete meal
+    path("meal/<uuid:meal_id>", views.meal_view, name="meal_view"),
 
     ###### categories:
-    # add category
+    # patch: add category
     path("category/", views.add_category, name="add_category"), 
 
     # get all categories
