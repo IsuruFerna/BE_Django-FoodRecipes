@@ -2,8 +2,10 @@ from typing import Any
 from django.core.management.base import BaseCommand
 
 import requests
+import random
 
 from recipes.models import Category
+from users.models import CustomUser
 
 # populate category data to DB
 def populate_category_data():
@@ -15,19 +17,25 @@ def populate_category_data():
         if categories:
             print(len(categories['categories']))
             for category in categories['categories']:
+                
+                # select random user
+                users = CustomUser.objects.all()
+                random_num = random.randint(0, users.count() - 1)
+                random_user = users[random_num]
+
                 current_category = Category(
+                    user=random_user,
                     strCategory=category['strCategory'],
                     strCategoryTumb=category['strCategoryThumb'],
                     strCategoryDescription=category['strCategoryDescription']
                 )
 
-                # print("this is category :", category)
+                try:
+                    current_category.save()
+                    print(f"Added: {category['strCategory']}")
 
-                success = current_category.save()
-                if not success:
-                    print(f"something went wrong at {category}")
-                else:
-                    print(f"Added")
+                except Exception as e:
+                    print(f"something went wrong at {category}. Error: {str(e)}")
 
 
 class Command(BaseCommand):

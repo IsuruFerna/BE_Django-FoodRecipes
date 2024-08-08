@@ -1,10 +1,14 @@
 from django.db import models
 
-# Create your models here.
+import uuid
+
+from users.models import CustomUser
+
 class Category(models.Model):
-    idCategory = models.AutoField(primary_key=True)
+    idCategory = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="categories")
     strCategory = models.CharField(max_length=64)
-    strCategoryTumb = models.URLField()
+    strCategoryTumb = models.URLField(max_length=300)
     strCategoryDescription = models.TextField()
 
     def __str__(self):
@@ -12,10 +16,11 @@ class Category(models.Model):
 
 
 class Meal(models.Model):
-    idMeal = models.AutoField(primary_key=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="meals")
+    strCategory = models.ForeignKey(Category, on_delete=models.CASCADE)
+    idMeal = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     strMeal = models.CharField(max_length=200)
     strDrinkAlternate = models.CharField(null=True, blank=True, max_length=64)
-    strCategory = models.ForeignKey(Category, on_delete=models.CASCADE)
     strArea = models.CharField(max_length=64, blank=True)
     strInstructions =  models.TextField(max_length=5000)
     strMealThumb =  models.URLField(blank=True)
@@ -63,10 +68,41 @@ class Meal(models.Model):
     strMeasure20 =  models.CharField(max_length=60, blank=True)
     strSource = models.URLField(blank=True)
     strImageSource = models.URLField(blank=True)
-    strCreativeCommonsConfirmed = models.BooleanField(blank=True)
+    strCreativeCommonsConfirmed = models.BooleanField(blank=True, null=True)
     dateModified = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return f"Meal: {self.strMeal}, id: {self.idMeal}, category: {self.strCategory}"
+    
+    def is_valid_meal(self):
+        at_lest_three_must_not_empty = False
+        ingredients = [
+            self.strIngredient1,
+            self.strIngredient2,
+            self.strIngredient3,
+            self.strIngredient4,
+            self.strIngredient5,
+            self.strIngredient6,
+            self.strIngredient7,
+            self.strIngredient8,
+            self.strIngredient9,
+            self.strIngredient10,
+            self.strIngredient11,
+            self.strIngredient12,
+            self.strIngredient13,
+            self.strIngredient14,
+            self.strIngredient15,
+            self.strIngredient16,
+            self.strIngredient17,
+            self.strIngredient18,
+            self.strIngredient19,
+            self.strIngredient20,
+        ]
+        
+        # checks if there are at least 3 ingredients
+        if len([i for i in ingredients if i]) >= 3:
+            at_lest_three_must_not_empty = True
+
+        return len(self.strInstructions) < 5000 and self.strCategory and len(self.strMeal) < 200 and at_lest_three_must_not_empty
 
 

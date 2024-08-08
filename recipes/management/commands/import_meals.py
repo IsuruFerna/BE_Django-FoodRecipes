@@ -1,11 +1,13 @@
 from typing import Any
 from django.core.management.base import BaseCommand
 
+import random
 import requests
 import json
 
 from django.forms import ModelForm
 from recipes.models import Category, Meal
+from users.models import CustomUser
 
 class MealForm(ModelForm):
      class Meta:
@@ -24,6 +26,10 @@ def populate_meal_data(firstLetter):
         if meals and meals['meals'] is not None:
 
             for meal in meals['meals']:
+                # select random user
+                users = CustomUser.objects.all()
+                random_num = random.randint(0, users.count() - 1)
+                random_user = users[random_num]
                 
                 # selects category of the meal    
                 current_category = Category.objects.get(strCategory=meal['strCategory'])
@@ -31,6 +37,7 @@ def populate_meal_data(firstLetter):
                 # make a copy of the meal and removes the strCategory to avoid multiple values
                 meal_copy = meal.copy()
                 meal_copy.pop("strCategory", None)
+                meal_copy.pop("user", None)
 
                 if meal:
 
@@ -38,15 +45,20 @@ def populate_meal_data(firstLetter):
                     current_meal = MealForm({
                         **meal_copy,
                         "strCategory":current_category,
+                        "user": random_user.id
                     })
 
                     # checks form validity and saves
                     if not current_meal.is_valid():
                         print(dict(current_meal.errors))
-                        print("modal cant be saved!")
+                        print(f"modal cant be saved! user: {random_user.id}")
                     else:
-                        print("modal saved")
-                        current_meal.save()
+                        try:
+                            current_meal.save()
+                            print(f"added: {current_meal['strMeal']}")
+                        
+                        except Exception as e:
+                            print(f"something wrong at: {current_meal['strMeal']}! Error: {str(e)}")
  
         else:
             print(f"No meals found beginning with the letter '{firstLetter}'")
