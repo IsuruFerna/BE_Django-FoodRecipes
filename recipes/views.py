@@ -114,92 +114,7 @@ def search_by(request):
             status=status.HTTP_404_NOT_FOUND
         )
 
-# add new category
-# /recipes/category/
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def add_category(request):
-    
-    category = request.data.copy()
-    category['user'] = request.user.id
 
-    serialized_category = CategorySerializer(data=category)
-
-    if not serialized_category.is_valid():
-        return Response(serialized_category.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    serialized_category.save()
-
-    return Response(serialized_category.data, status=status.HTTP_201_CREATED)
-
-
-# get category
-# /recipes/category/<category_id>
-@api_view(['GET'])
-def category_view(request, category_id):
-
-    try:
-        category = Category.objects.get(pk=category_id)
-    except ObjectDoesNotExist:
-        return Response(
-            {"error": f"Category does not found with Id: {category_id}"}
-        )
-    
-    serialized_category = CategorySerializer(category)
-    return Response(
-        serialized_category.data,
-        status=status.HTTP_200_OK
-    )
-
-
-# edit or delete category
-# /recipes/category/<category_id>
-@api_view(['PATCH', 'DELETE'])
-@permission_classes([IsAuthenticated])
-def edit_delete_category_view(request, category_id):
-
-    data = request.data
-
-    # check if the given category is already exsists in the db
-    try:
-        category = Category.objects.get(pk=category_id)
-
-    except ObjectDoesNotExist:
-        return Response(
-            {"error": f"Category does not found with Id: {category_id}"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
-    # check if the category is created by the requsting user
-    if category.user.id != request.user.id:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
-    
-    # updates modifications
-    if request.method == 'PATCH':
-        serialized_category = CategorySerializer(instance=category, data=data)
-
-        if not serialized_category.is_valid(): 
-            return Response(
-                serialized_category.errors, status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        serialized_category.save()
-        return Response(
-            serialized_category.data, status=status.HTTP_200_OK
-        )    
-
-    # delete category
-    if request.method == 'DELETE':
-        category.delete()
-
-        return Response(
-            {"message": f"Category ID: {category_id} successfully deleted!"},
-            status=status.HTTP_404_NOT_FOUND
-        )
-    
-    return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    
 
 # add new meal 
 # /recipes/add-recipe/
@@ -288,6 +203,105 @@ def meal_edit_delete(request, meal_id):
         }, status=status.HTTP_204_NO_CONTENT)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+################################## CATEGORIES #################################################
+
+
+# add new category
+# /recipes/category/
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_category(request):
+    
+    category = request.data.copy()
+    category['user'] = request.user.id
+
+    serialized_category = CategorySerializer(data=category)
+
+    if not serialized_category.is_valid():
+        return Response(serialized_category.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    serialized_category.save()
+
+    return Response(serialized_category.data, status=status.HTTP_201_CREATED)
+
+
+
+# get all the categories
+# recipes/categories/
+@api_view(['GET'])
+def all_categories(request):
+
+    categories = Category.objects.all().order_by('strCategory')
+    return paginator_response(categories, request, CategorySerializer)
+
+
+
+# get, modify or delete specific category
+# recipes/categoriy/<uuid:category_id>
+@api_view(['GET', 'PATCH', 'DELETE'])
+def category_view(request, category_id):
+
+    # check if the given category is already exsists in the db
+    try:
+        category = Category.objects.get(pk=category_id)
+
+    except ObjectDoesNotExist:
+        return Response(
+            {"error": f"Category does not found with Id: {category_id}"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    # get requests
+    if request.method == 'GET':
+
+        serialized_category = CategorySerializer(category)
+        return Response(
+            serialized_category.data,
+            status=status.HTTP_200_OK
+        )
+    
+    # edit or delete requests
+    if request.user.is_authenticated:
+        
+        # retriave data for modification
+        data = request.data
+
+        # check if the category is created by the requsting user
+        if category.user.id != request.user.id:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        # updates modifications
+        if request.method == 'PATCH':
+            serialized_category = CategorySerializer(instance=category, data=data)
+
+            # validate data
+            if not serialized_category.is_valid(): 
+                return Response(
+                    serialized_category.errors, status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            serialized_category.save()
+            return Response(
+                serialized_category.data, status=status.HTTP_200_OK
+            )    
+
+        # delete category
+        if request.method == 'DELETE':
+            category.delete()
+
+            return Response(
+                {"message": f"Category ID: {category_id} successfully deleted!"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    
+
+
+
 
 
 
