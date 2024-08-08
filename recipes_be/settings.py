@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     # 'users.apps.BaseConfig', # only if you do not want to use separate app(with a directory). after that migrate
 
     "corsheaders",
+    "rest_framework_swagger",
 ]
 
 REST_FRAMEWORK = {
@@ -145,7 +146,7 @@ ROOT_URLCONF = 'recipes_be.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
