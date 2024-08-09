@@ -26,7 +26,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(required=True)
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email']
 
 class CreatUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
@@ -38,8 +38,23 @@ class CreatUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
-        
 
+    def validate(self, attrs):
+        password = attrs.get('password')
+        user = self.instance
+        errors = dict()
+        
+        #password validation
+        try:
+            # validate the password and catch the exception
+            validator.validate_password(password=password, user=user)
+        
+        except exceptions.ValidationError as e:
+            errors['password'] = list(e.messages)
+            raise serializers.ValidationError(errors)
+
+        return attrs
+            
 class ModifyUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
     first_name = serializers.CharField(required=True)
@@ -67,13 +82,6 @@ class ModifyUserSerializer(serializers.ModelSerializer):
             
             except exceptions.ValidationError as e:
                 errors['new_password'] = list(e.messages)
-
-        # check if the provided old_password is match with the currently exsisting password
-        if old_password and new_password and not check_password(old_password, user.password):
-            errors['old_password'] = "Current password is mismatching with the provided password!"
-            # raise serializers.ValidationError({"old_password": "Old password is not matching"})
-        
-        if errors:
-            raise serializers.ValidationError(errors)
-        
+                raise serializers.ValidationError(errors)
+                
         return attrs

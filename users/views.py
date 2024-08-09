@@ -1,27 +1,17 @@
-from django.shortcuts import render
-from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
+
+from drf_spectacular.utils import extend_schema
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, serializers
 from rest_framework.permissions import IsAuthenticated
 
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password, make_password
 
-from .serializers import CustomUserSerializer, ModifyUserSerializer
+from .serializers import CreatUserSerializer, CustomUserSerializer, ModifyUserSerializer
 from .models import CustomUser
-from .utils import ResponseUser
-
-# Create your views here.
-@api_view(['GET'])
-def getRoutes(request):
-    routes = [
-        '/user/api/token',
-        '/user/api/token/refresh',
-        '/user/register/'
-    ]
-    return Response(routes)
 
 # register user 
 # /user/register/
@@ -34,25 +24,29 @@ def getRoutes(request):
     "password": password,
 }
 """
+@extend_schema(
+    request=CreatUserSerializer,
+    responses=CustomUserSerializer
+)
 @api_view(['POST'])
 def user_register_view(request):
-    data = request.data.copy()
+    data = request.data
     
-    if 'password' in data and data['password']:
-        data['password'] = make_password(data['password'])
+    # if 'password' in data and data['password']:
+    #     data['password'] = make_password(data['password'])
 
-    serializer = CustomUserSerializer(data=data)
+    serializer = CreatUserSerializer(data=data)
 
     if serializer.is_valid():
 
         # handle unique username
         try:
-            user = serializer.save()
-            serialized_user = CustomUserSerializer(user)
+            serializer.save(password=make_password(data['password']))
 
         except IntegrityError:
             raise serializers.ValidationError({"username": ["This username already exists."]})
-
+        
+        serialized_user = CustomUserSerializer(serializer.data)
         return Response(serialized_user.data, status=status.HTTP_201_CREATED)
     
     return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -60,42 +54,60 @@ def user_register_view(request):
 
 # get logged user details and modify them
 # /user/me/
+@extend_schema(
+        request=ModifyUserSerializer,
+        responses=CustomUserSerializer
+)
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def my_view(request):
-    user_data = request.user
+
+    # get current user
+    try:
+        current_user_data = CustomUser.objects.get(pk=request.user.id)
+        
+    except CustomUser.DoesNotExist:
+        return Response(
+            {"message": "user does not found!"},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
     # get's user data
     if request.method == "GET":
-        userRespone = ResponseUser(
-            user_data.id, 
-            user_data.username,
-            user_data.first_name,
-            user_data.last_name,
-            user_data.email
-        )
-
-        return Response(userRespone.__dict__, status=status.HTTP_200_OK)
+        serializer = CustomUserSerializer(current_user_data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     # modifies user data
     if request.method == 'PUT':
-        user_old_data = CustomUser.objects.get(pk=user_data.id)
+
+        user_upadate_data = request.data
 
         # set instence with new data
-        serializer = ModifyUserSerializer(instance=user_old_data, data=request.data)
+        serializer = ModifyUserSerializer(instance=current_user_data, data=user_upadate_data)
 
         if serializer.is_valid():
-            serializer.save()
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            old_password = user_upadate_data['old_password']
+            new_password = user_upadate_data['new_password']
+
+            # checks new password with the old one currently saved in db
+            if old_password and new_password and not check_password(old_password, current_user_data.password):
+
+                return Response(
+                    {"message"  :"New password is mismatching with the current password!"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            serializer.save(password=make_password(new_password))
+            serialized_user = CustomUserSerializer(serializer.data)
+
+            return Response(serialized_user.data, status=status.HTTP_205_RESET_CONTENT)
     
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # get user by id
 # /user/<user_id>/
+@extend_schema(responses=CustomUserSerializer)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user(request, user_id):
@@ -108,7 +120,4 @@ def get_user(request, user_id):
     
     serialized_user = CustomUserSerializer(user)
     return Response(serialized_user.data)
-
-def index(request):
-    return Response({"message": "hello world!"})
 
