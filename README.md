@@ -1,6 +1,6 @@
 # Django DRF Recipes API Documentation
 
-This is a Python Docker backend project for a food recipe app. Users can register and manage recipes and categories. Below is a detailed explanation of the API functionality, along with instructions on how to set up and use the application.
+This is a Python Django backend project for a food recipe app. Users can register and manage recipes and categories. Below is a detailed explanation of the API functionality, along with instructions on how to set up and use the application.
 
 ---
 
