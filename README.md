@@ -107,13 +107,6 @@ The API is structured into two main sections: **Recipes** and **User**. Below ar
 | `POST`  | `/user/register/`            | Register a new user.                               |
 | `GET`   | `/user/{user_id}/`           | Retrieve a specific user's details by ID.          |
 
-### API Documentation
-
-| Method  | Endpoint                     | Description                                        |
-|---------|------------------------------|----------------------------------------------------|
-| `GET`   | ``                           | API documentation provided Swagger                 |
-| `GET`   | `/api/schema/redoc/`         | API documentation provided Redoc(well detailed)    |
-
 ## Authentication
 
 - **Public Access:** **GET** requests to list or retrieve resources do not require authentication, allowing public access.
@@ -144,6 +137,33 @@ To set up the project locally, follow these steps:
    cd <repository-directory>
 
 2. **[How to Use the App](#how-to-use-the-app)**
+
+## API Documentation
+
+| Method  | Endpoint                     | Description                                        |
+|---------|------------------------------|----------------------------------------------------|
+| `GET`   | ``                           | API documentation provided Swagger                 |
+| `GET`   | `/api/schema/redoc/`         | API documentation provided Redoc(well detailed)    |
+
+### Swagger UI
+
+For a comprehensive view of the API endpoints, refer to the Swagger UI documentation. You can access it locally via [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+
+#### Swagger UI Screenshot
+
+![image](https://github.com/user-attachments/assets/1977cf67-a489-4c7a-9772-79dc528ec9f2)
+
+### Redoc UI
+
+For a detailed endpoint experience, refer to the Redoc UI documentation. Access it at:
+[http://127.0.0.1:8000/api/schema/redoc](http://127.0.0.1:8000/api/schema/redoc)
+
+#### Redoc UI Screenshot
+
+![image](https://github.com/user-attachments/assets/f9bc6d2a-90b6-4063-bcab-d6d7b050c615)
+
+
+
 
 
 ## Front-end - under development
