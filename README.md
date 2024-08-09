@@ -59,12 +59,15 @@ After building the containers, migrate the database using the following commands
   python manage.py migrate
   
 - **Create a Superuser**
-- To create a superuser for accessing the Django admin panel:
+  
+  To create a superuser for accessing the Django admin panel:
   ```bash
   python manage.py createsuperuser
   
 - **Importing Dummy Data**
-- You can populate the database with dummy data using custom commands. Ensure to follow the order due to relational models. For educational purposes, categories and meals can be imported from The Meal DB API.
+
+  You can populate the database with dummy data using custom commands. Ensure to follow the order due to relational models.
+  For educational purposes, categories and meals can be imported from [The Meal DB API](https://www.themealdb.com/api.php).
 
 - Custom commands available in `recipes/management/commands` directory
   ```bash
@@ -104,6 +107,13 @@ The API is structured into two main sections: **Recipes** and **User**. Below ar
 | `POST`  | `/user/register/`            | Register a new user.                               |
 | `GET`   | `/user/{user_id}/`           | Retrieve a specific user's details by ID.          |
 
+### API Documentation
+
+| Method  | Endpoint                     | Description                                        |
+|---------|------------------------------|----------------------------------------------------|
+| `GET`   | ``                           | API documentation provided Swagger                 |
+| `GET`   | `/api/schema/redoc/`         | API documentation provided Redoc(well detailed)    |
+
 ## Authentication
 
 - **Public Access:** **GET** requests to list or retrieve resources do not require authentication, allowing public access.
@@ -130,12 +140,10 @@ To set up the project locally, follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/IsuruFerna/BE_Django-FoodRecipes.git
    cd <repository-directory>
 
-![image](https://github.com/user-attachments/assets/c9662e76-037b-4d85-ae1e-027518c9a1ab)
-![image](https://github.com/user-attachments/assets/b07192a4-3b5f-4eba-b9cf-1b39a8a2397c)
-
+2. **[How to Use the App](#how-to-use-the-app)**
 
 
 ## Front-end - under development
