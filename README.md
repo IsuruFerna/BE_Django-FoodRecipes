@@ -133,6 +133,10 @@ To set up the project locally, follow these steps:
    git clone <repository-url>
    cd <repository-directory>
 
+![image](https://github.com/user-attachments/assets/c9662e76-037b-4d85-ae1e-027518c9a1ab)
+![image](https://github.com/user-attachments/assets/b07192a4-3b5f-4eba-b9cf-1b39a8a2397c)
+
+
 
 ## Front-end - under development
 
