@@ -21,7 +21,7 @@ This is a Python Django backend project for a food recipe app. Users can registe
 
 ## Introduction
 
-This project is a **Python Docker backend** for a food recipe app. Users can register, add, modify, and delete recipes and categories. **GET** requests do not require authentication, allowing anyone to access them without registering. However, actions such as adding, modifying, or deleting posts or categories require user authentication. Only the users who created recipes or categories can modify or delete them.
+This project is a **Python Django backend** for a food recipe app. Users can register, add, modify, and delete recipes and categories. **GET** requests do not require authentication, allowing anyone to access them without registering. However, actions such as adding, modifying, or deleting posts or categories require user authentication. Only the users who created recipes or categories can modify or delete them.
 
 To make the API endpoints easy to understand, I used Swagger and Redoc to provide comprehensive API documentation.
 
