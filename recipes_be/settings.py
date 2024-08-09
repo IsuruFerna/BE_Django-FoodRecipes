@@ -25,8 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 from datetime import timedelta
 
-from decouple import config
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -38,7 +36,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
 DEBUG = True
 
 # only for development process
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 
 AUTH_USER_MODEL = "users.CustomUser"
 
