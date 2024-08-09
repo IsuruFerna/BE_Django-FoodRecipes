@@ -1,0 +1,865 @@
+openapi: 3.0.3
+info:
+  title: Django DRF Recipes API
+  version: 1.0.0
+  description: Your project description
+paths:
+  /recipes/:
+    get:
+      operationId: recipes_retrieve
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+          description: ''
+  /recipes/categories/:
+    get:
+      operationId: recipes_categories_retrieve
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /recipes/category/:
+    post:
+      operationId: recipes_category_create
+      tags:
+      - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /recipes/category/{category_id}:
+    get:
+      operationId: recipes_category_retrieve
+      parameters:
+      - in: path
+        name: category_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    patch:
+      operationId: recipes_category_partial_update
+      parameters:
+      - in: path
+        name: category_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    delete:
+      operationId: recipes_category_destroy
+      parameters:
+      - in: path
+        name: category_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /recipes/meal/:
+    post:
+      operationId: recipes_meal_create
+      tags:
+      - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Meal'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Meal'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Meal'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+          description: ''
+  /recipes/meal/{meal_id}:
+    get:
+      operationId: recipes_meal_retrieve
+      parameters:
+      - in: path
+        name: meal_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+          description: ''
+    patch:
+      operationId: recipes_meal_partial_update
+      parameters:
+      - in: path
+        name: meal_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMeal'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMeal'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMeal'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+          description: ''
+    delete:
+      operationId: recipes_meal_destroy
+      parameters:
+      - in: path
+        name: meal_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /recipes/random/:
+    get:
+      operationId: recipes_random_retrieve
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+          description: ''
+  /recipes/search/:
+    get:
+      operationId: recipes_search_retrieve
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+          description: ''
+  /user/:
+    get:
+      operationId: user_retrieve
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /user/api/token/:
+    post:
+      operationId: user_api_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyTokenObtainPair'
+          description: ''
+  /user/api/token/refresh/:
+    post:
+      operationId: user_api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /user/me/:
+    get:
+      operationId: user_me_retrieve
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifyUser'
+          description: ''
+    put:
+      operationId: user_me_update
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifyUser'
+          description: ''
+  /user/register/:
+    post:
+      operationId: user_register_create
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+  /user/user/{user_id}:
+    get:
+      operationId: user_user_retrieve
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        idCategory:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+        strCategory:
+          type: string
+          maxLength: 64
+        strCategoryTumb:
+          type: string
+          format: uri
+          maxLength: 300
+        strCategoryDescription:
+          type: string
+      required:
+      - idCategory
+      - strCategory
+      - strCategoryDescription
+      - strCategoryTumb
+    CustomUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          maxLength: 128
+      required:
+      - email
+      - first_name
+      - id
+      - last_name
+      - password
+      - username
+    Meal:
+      type: object
+      properties:
+        idMeal:
+          type: string
+          format: uuid
+          readOnly: true
+        strCategory:
+          type: string
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+          readOnly: true
+        strMeal:
+          type: string
+          maxLength: 200
+        strDrinkAlternate:
+          type: string
+          nullable: true
+          maxLength: 64
+        strArea:
+          type: string
+          maxLength: 64
+        strInstructions:
+          type: string
+          maxLength: 5000
+        strMealThumb:
+          type: string
+          format: uri
+          maxLength: 200
+        strTags:
+          type: string
+          maxLength: 200
+        strYoutube:
+          type: string
+          format: uri
+          maxLength: 200
+        strIngredient1:
+          type: string
+          maxLength: 64
+        strIngredient2:
+          type: string
+          maxLength: 64
+        strIngredient3:
+          type: string
+          maxLength: 64
+        strIngredient4:
+          type: string
+          maxLength: 64
+        strIngredient5:
+          type: string
+          maxLength: 64
+        strIngredient6:
+          type: string
+          maxLength: 64
+        strIngredient7:
+          type: string
+          maxLength: 64
+        strIngredient8:
+          type: string
+          maxLength: 64
+        strIngredient9:
+          type: string
+          maxLength: 64
+        strIngredient10:
+          type: string
+          maxLength: 64
+        strIngredient11:
+          type: string
+          maxLength: 64
+        strIngredient12:
+          type: string
+          maxLength: 64
+        strIngredient13:
+          type: string
+          maxLength: 64
+        strIngredient14:
+          type: string
+          maxLength: 64
+        strIngredient15:
+          type: string
+          maxLength: 64
+        strIngredient16:
+          type: string
+          maxLength: 64
+        strIngredient17:
+          type: string
+          maxLength: 64
+        strIngredient18:
+          type: string
+          maxLength: 64
+        strIngredient19:
+          type: string
+          maxLength: 64
+        strIngredient20:
+          type: string
+          maxLength: 64
+        strMeasure1:
+          type: string
+          maxLength: 60
+        strMeasure2:
+          type: string
+          maxLength: 60
+        strMeasure3:
+          type: string
+          maxLength: 60
+        strMeasure4:
+          type: string
+          maxLength: 60
+        strMeasure5:
+          type: string
+          maxLength: 60
+        strMeasure6:
+          type: string
+          maxLength: 60
+        strMeasure7:
+          type: string
+          maxLength: 60
+        strMeasure8:
+          type: string
+          maxLength: 60
+        strMeasure9:
+          type: string
+          maxLength: 60
+        strMeasure10:
+          type: string
+          maxLength: 60
+        strMeasure11:
+          type: string
+          maxLength: 60
+        strMeasure12:
+          type: string
+          maxLength: 60
+        strMeasure13:
+          type: string
+          maxLength: 60
+        strMeasure14:
+          type: string
+          maxLength: 60
+        strMeasure15:
+          type: string
+          maxLength: 60
+        strMeasure16:
+          type: string
+          maxLength: 60
+        strMeasure17:
+          type: string
+          maxLength: 60
+        strMeasure18:
+          type: string
+          maxLength: 60
+        strMeasure19:
+          type: string
+          maxLength: 60
+        strMeasure20:
+          type: string
+          maxLength: 60
+        strSource:
+          type: string
+          format: uri
+          maxLength: 200
+        strImageSource:
+          type: string
+          format: uri
+          maxLength: 200
+        strCreativeCommonsConfirmed:
+          type: boolean
+          nullable: true
+        dateModified:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - idMeal
+      - strCategory
+      - strInstructions
+      - strMeal
+      - user
+    ModifyUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        old_password:
+          type: string
+        new_password:
+          type: string
+      required:
+      - first_name
+      - id
+      - last_name
+      - username
+    MyTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    PatchedCategory:
+      type: object
+      properties:
+        idCategory:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+        strCategory:
+          type: string
+          maxLength: 64
+        strCategoryTumb:
+          type: string
+          format: uri
+          maxLength: 300
+        strCategoryDescription:
+          type: string
+    PatchedMeal:
+      type: object
+      properties:
+        idMeal:
+          type: string
+          format: uuid
+          readOnly: true
+        strCategory:
+          type: string
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+          readOnly: true
+        strMeal:
+          type: string
+          maxLength: 200
+        strDrinkAlternate:
+          type: string
+          nullable: true
+          maxLength: 64
+        strArea:
+          type: string
+          maxLength: 64
+        strInstructions:
+          type: string
+          maxLength: 5000
+        strMealThumb:
+          type: string
+          format: uri
+          maxLength: 200
+        strTags:
+          type: string
+          maxLength: 200
+        strYoutube:
+          type: string
+          format: uri
+          maxLength: 200
+        strIngredient1:
+          type: string
+          maxLength: 64
+        strIngredient2:
+          type: string
+          maxLength: 64
+        strIngredient3:
+          type: string
+          maxLength: 64
+        strIngredient4:
+          type: string
+          maxLength: 64
+        strIngredient5:
+          type: string
+          maxLength: 64
+        strIngredient6:
+          type: string
+          maxLength: 64
+        strIngredient7:
+          type: string
+          maxLength: 64
+        strIngredient8:
+          type: string
+          maxLength: 64
+        strIngredient9:
+          type: string
+          maxLength: 64
+        strIngredient10:
+          type: string
+          maxLength: 64
+        strIngredient11:
+          type: string
+          maxLength: 64
+        strIngredient12:
+          type: string
+          maxLength: 64
+        strIngredient13:
+          type: string
+          maxLength: 64
+        strIngredient14:
+          type: string
+          maxLength: 64
+        strIngredient15:
+          type: string
+          maxLength: 64
+        strIngredient16:
+          type: string
+          maxLength: 64
+        strIngredient17:
+          type: string
+          maxLength: 64
+        strIngredient18:
+          type: string
+          maxLength: 64
+        strIngredient19:
+          type: string
+          maxLength: 64
+        strIngredient20:
+          type: string
+          maxLength: 64
+        strMeasure1:
+          type: string
+          maxLength: 60
+        strMeasure2:
+          type: string
+          maxLength: 60
+        strMeasure3:
+          type: string
+          maxLength: 60
+        strMeasure4:
+          type: string
+          maxLength: 60
+        strMeasure5:
+          type: string
+          maxLength: 60
+        strMeasure6:
+          type: string
+          maxLength: 60
+        strMeasure7:
+          type: string
+          maxLength: 60
+        strMeasure8:
+          type: string
+          maxLength: 60
+        strMeasure9:
+          type: string
+          maxLength: 60
+        strMeasure10:
+          type: string
+          maxLength: 60
+        strMeasure11:
+          type: string
+          maxLength: 60
+        strMeasure12:
+          type: string
+          maxLength: 60
+        strMeasure13:
+          type: string
+          maxLength: 60
+        strMeasure14:
+          type: string
+          maxLength: 60
+        strMeasure15:
+          type: string
+          maxLength: 60
+        strMeasure16:
+          type: string
+          maxLength: 60
+        strMeasure17:
+          type: string
+          maxLength: 60
+        strMeasure18:
+          type: string
+          maxLength: 60
+        strMeasure19:
+          type: string
+          maxLength: 60
+        strMeasure20:
+          type: string
+          maxLength: 60
+        strSource:
+          type: string
+          format: uri
+          maxLength: 200
+        strImageSource:
+          type: string
+          format: uri
+          maxLength: 200
+        strCreativeCommonsConfirmed:
+          type: boolean
+          nullable: true
+        dateModified:
+          type: string
+          format: date-time
+          nullable: true
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

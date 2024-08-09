@@ -32,7 +32,7 @@ from decouple import config
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # uses keys from github secrets or local ".env" 
-SECRET_KEY = os.getenv('SECRET_KEY', env('SECRET_KEY')) 
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key') 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -60,7 +60,9 @@ INSTALLED_APPS = [
     # 'users.apps.BaseConfig', # only if you do not want to use separate app(with a directory). after that migrate
 
     "corsheaders",
-    "rest_framework_swagger",
+
+    "drf_spectacular",
+    'drf_spectacular_sidecar',
 ]
 
 REST_FRAMEWORK = {
@@ -74,6 +76,19 @@ REST_FRAMEWORK = {
     'PAGE_SIZE_QUERY_PARAM': 'per_page',
     'MAX_PAGE_SIZE': 100, 
 
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Django DRF Recipes API",
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
 }
 
 # documentation: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
@@ -165,22 +180,22 @@ WSGI_APPLICATION = 'recipes_be.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
-    'default': {  
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_NAME', env('POSTGRES_NAME')),
-        'USER': os.getenv('POSTGRES_USER', env('POSTGRES_USER')),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', env('POSTGRES_PASSWORD')),
-        'HOST': 'db',
-        'PORT': 5432,
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {  
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('POSTGRES_NAME', 'default-name'),
+#         'USER': os.getenv('POSTGRES_USER', 'default-user'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'default-password'),
+#         'HOST': 'db',
+#         'PORT': 5432,
+#     }
+# }
 
 
 # Password validation

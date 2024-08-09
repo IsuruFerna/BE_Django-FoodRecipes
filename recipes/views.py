@@ -2,23 +2,24 @@ from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
+from drf_spectacular.utils import extend_schema
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 import random
-import logging
 
 from users.models import CustomUser
 from recipes.models import Category, Meal
 from .serializers import CategorySerializer, MealSerializer
 from utils.utils import paginator_response
 
-logger = logging.getLogger(__name__)
 
 # gets all the meals with paginator
 # /recipes/?page_num=1&per_page=10
+@extend_schema(responses=MealSerializer)
 @api_view(['GET'])
 def all_meals(request):
     meals = Meal.objects.all().order_by('strMeal')
@@ -29,6 +30,7 @@ def all_meals(request):
 
 # gets random 12 meals
 # /recipes/random/
+@extend_schema(responses=MealSerializer)
 @api_view(['GET'])
 def random_meals(request):
     meals = Meal.objects.all()
@@ -56,6 +58,7 @@ def random_meals(request):
 
 # search meals by name and category
 # /recipes/search/?name=meal_name&category=meal_category
+@extend_schema(responses=MealSerializer)
 @api_view(['GET'])
 def search_by(request):
     
@@ -127,6 +130,10 @@ def search_by(request):
 
 # add new meal 
 # /recipes/meal/
+@extend_schema(
+    request=MealSerializer,
+    responses=MealSerializer
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_meal(request):
@@ -158,6 +165,10 @@ def add_meal(request):
 
 # get, edit or delete meal
 # /recipes/meal/<uuid:id>
+@extend_schema(
+    request=MealSerializer,
+    responses=MealSerializer
+)
 @api_view(['GET', 'DELETE', 'PATCH'])
 def meal_view(request, meal_id):
 
@@ -244,6 +255,10 @@ def meal_view(request, meal_id):
 
 # add new category
 # /recipes/category/
+@extend_schema(
+    request=CategorySerializer,
+    responses=CategorySerializer
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_category(request):
@@ -264,6 +279,7 @@ def add_category(request):
 
 # get all the categories
 # recipes/categories/
+@extend_schema(responses=CategorySerializer)
 @api_view(['GET'])
 def all_categories(request):
 
@@ -274,6 +290,10 @@ def all_categories(request):
 
 # get, modify or delete specific category
 # recipes/categoriy/<uuid:category_id>
+@extend_schema(
+    request=CategorySerializer,
+    responses=CategorySerializer
+)
 @api_view(['GET', 'PATCH', 'DELETE'])
 def category_view(request, category_id):
 

@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
+
+from drf_spectacular.utils import extend_schema
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, serializers
@@ -34,6 +35,7 @@ def getRoutes(request):
     "password": password,
 }
 """
+@extend_schema(responses=CustomUserSerializer)
 @api_view(['POST'])
 def user_register_view(request):
     data = request.data.copy()
@@ -60,6 +62,7 @@ def user_register_view(request):
 
 # get logged user details and modify them
 # /user/me/
+@extend_schema(responses=ModifyUserSerializer)
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def my_view(request):
@@ -96,6 +99,7 @@ def my_view(request):
 
 # get user by id
 # /user/<user_id>/
+@extend_schema(responses=CustomUserSerializer)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user(request, user_id):
